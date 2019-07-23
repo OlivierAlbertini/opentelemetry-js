@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { HttpTextFormat } from '../context/propagation/HttpTextFormat';
 import { Span } from './span';
 import { SpanOptions } from './SpanOptions';
 
@@ -85,8 +86,6 @@ export interface Tracer {
    * If no tracer implementation is provided, this defaults to the W3C Trace
    * Context HTTP text format ({@link HttpTraceContext}). For more details see
    * <a href="https://w3c.github.io/trace-context/">W3C Trace Context</a>.
-   *
-   * @todo: Change return type once HttpTextFormat is available
    */
-  getHttpTextFormat(): unknown;
+  getHttpTextFormat(): HttpTextFormat;
 }
