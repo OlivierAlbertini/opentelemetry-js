@@ -19,14 +19,14 @@ function makeRequest() {
     const span = tracer.startSpan('makeRequest');
     tracer.withSpan(span, () => {
         https.get({
-            host: 'localhost',
+            host: 'digitalocean.com',
             port: 443,
-            path: '/helloworld'
+            path: '/en/news/outdoor-renovation-permits-are-now-available-online'
         }, (response) => {
             let body = [];
             response.on('data', chunk => body.push(chunk));
             response.on('end', () => {
-                console.log(body.toString());
+                // console.log(body.toString());
                 span.end();
             });
         });

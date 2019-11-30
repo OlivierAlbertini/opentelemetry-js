@@ -9,7 +9,23 @@ const EXPORTER = process.env.EXPORTER || '';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 function setupTracerAndExporters(service) {
   let exporter;
-  const tracer = new NodeTracer();
+  const tracer = new NodeTracer({
+    logLevel: opentelemetry.LogLevel.DEBUG,
+    plugins: {
+        https: {
+            enabled: true,
+            // if it can't find the module, put the absolute path (depending your config, since packages are not published)
+            path: '@opentelemetry/plugin-https'
+        },
+        dns: {
+          enabled: true,
+          ignoreHostnames: ['localhost'],
+          // if it can't find the module, put the absolute path (depending your config, since packages are not published)
+          path: '/Users/ualbe94/apps/opentelemetry-js/examples/https/node_modules/@opentelemetry/plugin-dns'
+      }
+    }
+});
+require('dns');
 
   if (EXPORTER.toLowerCase().startsWith('z')) {
     exporter = new ZipkinExporter({
