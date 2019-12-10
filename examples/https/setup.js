@@ -21,7 +21,7 @@ function setupTracerAndExporters(service) {
           enabled: true,
           ignoreHostnames: ['localhost'],
           // if it can't find the module, put the absolute path (depending your config, since packages are not published)
-          path: '/Users/ualbe94/apps/opentelemetry-js/examples/https/node_modules/@opentelemetry/plugin-dns'
+          path: '@opentelemetry/plugin-dns'
       }
     }
 });
