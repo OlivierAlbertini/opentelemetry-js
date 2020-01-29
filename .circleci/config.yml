@@ -90,28 +90,28 @@ node_unit_tests: &node_unit_tests
         command: |
           node --version
           echo "CIRCLE_NODE_VERSION=${CIRCLE_NODE_VERSION}"
-    - restore_cache:
-        keys:
-          - npm-cache-01-{{ .Environment.CIRCLE_JOB }}-{{ checksum "/tmp/checksums.txt" }}-1
-    - restore_cache:
-        keys:
-          - npm-cache-02-{{ .Environment.CIRCLE_JOB }}-{{ checksum "/tmp/checksums.txt" }}-2
+    # - restore_cache:
+    #     keys:
+    #       - npm-cache-01-{{ .Environment.CIRCLE_JOB }}-{{ checksum "/tmp/checksums.txt" }}-1
+    # - restore_cache:
+    #     keys:
+    #       - npm-cache-02-{{ .Environment.CIRCLE_JOB }}-{{ checksum "/tmp/checksums.txt" }}-2
     - run:
         name: Install Dependencies
-        command: yarn install
+        command: npm install
     - save_cache:
         <<: *cache_1
     - save_cache:
         <<: *cache_2
     - run:
         name: Compile code
-        command: yarn compile
+        command: npm run compile
     - run:
         name: Unit tests
-        command: yarn test
+        command: npm run test
     - run:
         name: report coverage
-        command: if [ "${CIRCLE_NODE_VERSION}" = "v12" ]; then yarn codecov; fi
+        command: if [ "${CIRCLE_NODE_VERSION}" = "v12" ]; then npm run codecov; fi
 
 browsers_unit_tests: &browsers_unit_tests
   steps:
@@ -137,17 +137,17 @@ browsers_unit_tests: &browsers_unit_tests
           - npm-cache-02-{{ .Environment.CIRCLE_JOB }}-{{ checksum "/tmp/checksums.txt" }}-1
     - run:
         name: Install Dependencies
-        command: yarn install
+        command: npm install
     - save_cache:
         <<: *cache_1
     - save_cache:
         <<: *cache_2
     - run:
         name: Unit tests
-        command: yarn test:browser
+        command: npm run test:browser
     - run:
         name: report coverage
-        command: if [ "$CIRCLE_NODE_VERSION" = "v12" ]; then yarn codecov:browser; fi
+        command: if [ "$CIRCLE_NODE_VERSION" = "v12" ]; then npm run codecov:browser; fi
 
 jobs:
   lint_&_docs:
@@ -155,18 +155,18 @@ jobs:
       - image: node:12
     steps:
       - checkout
-      - run:
-          name: Install minimal doc and lint modules globally
-          command: yarn global add lerna typedoc linkinator typescript gts tslint-consistent-codestyle tslint-microsoft-contrib
-      - run:
-          name: Symlink global modules into all lerna packages
-          command: lerna exec 'ln -s $(yarn global dir)/node_modules node_modules'
+      # - run:
+      #     name: Install minimal doc and lint modules globally
+      #     command: npm i -g lerna typedoc linkinator typescript gts tslint-consistent-codestyle tslint-microsoft-contrib
+      # - run:
+      #     name: Symlink global modules into all lerna packages
+      #     command: lerna exec 'ln -s $(npm root -g --silent) node_modules'
       - run:
           name: Check code style and linting
-          command: yarn run check
+          command: npm run check
       - run:
           name: Docs tests
-          command: yarn docs-test
+          command: npm run docs-test
       - persist_to_workspace:
           root: packages/opentelemetry-types/docs
           paths:
