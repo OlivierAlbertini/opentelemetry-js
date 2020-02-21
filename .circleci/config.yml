@@ -105,7 +105,7 @@ node_unit_tests: &node_unit_tests
         command: npm install --ignore-scripts
     - run:
         name: Boostrap dependencies
-        command: npx lerna bootstrap --no-ci
+        command: npx lerna bootstrap --no-ci --concurrency=2
     - save_cache:
         <<: *cache_1
     - save_cache:
@@ -145,7 +145,7 @@ browsers_unit_tests: &browsers_unit_tests
         command: npm install --ignore-scripts
     - run:
         name: Boostrap dependencies
-        command: npx lerna bootstrap --no-ci
+        command: npx lerna bootstrap --no-ci --concurrency=2
     - save_cache:
         <<: *cache_1
     - save_cache:
@@ -236,6 +236,15 @@ jobs:
       - *redis_service
       - *mongo_service
     <<: *node_unit_tests
+  node13:
+    docker:
+      - image: node:13
+        environment: *node_test_env
+      - *postgres_service
+      - *mysql_service
+      - *redis_service
+      - *mongo_service
+    <<: *node_unit_tests
   node12-browsers:
     docker:
       - image: circleci/node:12-browsers
@@ -257,7 +266,8 @@ workflows:
               only: /^v\d+\.\d+\.\d$/
             branches:
               ignore: /.*/
-      - node8
-      - node10
-      - node12
-      - node12-browsers
+      # - node8
+      # - node10
+      # - node12
+      - node13
+      # - node12-browsers
